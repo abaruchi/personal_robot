@@ -29,3 +29,21 @@ def read_telegram_config (config_file_path):
         telegram_conf_dict[option] = Conf.get("Telegram", option)
 
     return telegram_conf_dict
+
+
+def read_googlemaps_config(config_file_path):
+    """
+
+    :param config_file_path:
+    :return:
+    """
+
+    googlemaps_conf_dict = dict()
+    Conf = configparser.ConfigParser()
+    Conf.read(config_file_path)
+
+    options = Conf.options("GoogleMaps")
+    for option in options:
+        googlemaps_conf_dict[option] = Conf.get("GoogleMaps", option)
+
+    return googlemaps_conf_dict
