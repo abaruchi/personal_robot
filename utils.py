@@ -47,3 +47,21 @@ def read_googlemaps_config(config_file_path):
         googlemaps_conf_dict[option] = Conf.get("GoogleMaps", option)
 
     return googlemaps_conf_dict
+
+
+def read_subway_config(config_file_path):
+    """
+
+    :param config_file_path:
+    :return:
+    """
+
+    subway_conf_dict = dict()
+    Conf = configparser.ConfigParser()
+    Conf.read(config_file_path)
+
+    options = Conf.options("Subway")
+    for option in options:
+        subway_conf_dict[option] = Conf.get("Subway", option)
+
+    return subway_conf_dict
