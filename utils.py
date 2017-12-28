@@ -65,3 +65,33 @@ def read_subway_config(config_file_path):
         subway_conf_dict[option] = Conf.get("Subway", option)
 
     return subway_conf_dict
+
+
+class Regex(object):
+
+    @staticmethod
+    def remove_td_html_tag():
+        return r'<td>|<\/td>'
+
+class Messages(object):
+
+    @staticmethod
+    def metro_usage_help():
+        msg = """
+This command inform the subway (metro) lines status. 
+Usage:
+    /metro all: informs status of all subway lines
+    /metro azul: informs status of subway line blue
+    /metro vermelha: informs status of subway line red
+"""
+        return msg
+
+    @staticmethod
+    def cptm_usage_help():
+        msg = """
+This command inform the train (cptm) lines status. 
+Usage:
+    /cptm all: informs status of all subway lines
+    /cptm esmeralda: informs status of cptm line esmeralda
+"""
+        return msg

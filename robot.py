@@ -9,7 +9,8 @@ from telegram.ext import (Updater, CommandHandler)
 
 
 # Local source tree Imports
-from utils import read_telegram_config
+from utils import (read_telegram_config, Messages)
+from api.subway import (GetSubwayLineStatus, GetCPTMStatus)
 
 
 def start(bot, update):
@@ -18,6 +19,54 @@ def start(bot, update):
               'http://github.com/abaruchi). See you soon!'
     update.message.reply_text(message)
 
+
+def metro(bot, update, args):
+    """
+
+    :param bot:
+    :param update:
+    :param args:
+    :return:
+    """
+    arg_size = len(args)
+    if arg_size == 1:
+        metro_stat = GetSubwayLineStatus()
+        if args[0] == "all":
+            msg_dict = metro_stat.all_subway_lines_status()
+            message = ""
+            for line, status in msg_dict.items():
+                message = line + ": " + status + "\n" + message
+            bot.send_message(
+                chat_id=update.message.chat_id,
+                text=message)
+    else:
+        bot.send_message(chat_id=update.message.chat_id,
+                text=Messages.metro_usage_help())
+
+
+def cptm(bot, update, args):
+    """
+
+    :param bot:
+    :param update:
+    :param args:
+    :return:
+    """
+    arg_size = len(args)
+    if arg_size == 1:
+        cptm_stat = GetCPTMStatus()
+        if args[0] == "all":
+            msg_dict = cptm_stat.all_cptm_lines_status()
+            print(msg_dict)
+            message = ""
+            for line, status in msg_dict.items():
+                message = line + ": " + status + "\n" + message
+            bot.send_message(
+                chat_id=update.message.chat_id,
+                text=message)
+    else:
+        bot.send_message(chat_id=update.message.chat_id,
+                text=Messages.cptm_usage_help())
 
 def main():
     """Run bot."""
@@ -29,6 +78,9 @@ def main():
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
+    dp.add_handler(CommandHandler("metro", metro, pass_args=True))
+    dp.add_handler(CommandHandler("cptm", cptm, pass_args=True))
+
     # dp.add_handler(CommandHandler("help", start))
     # dp.add_handler(CommandHandler("set", set_timer,
     #                               pass_args=True,

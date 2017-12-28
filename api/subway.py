@@ -4,13 +4,14 @@
 # System Imports
 from re import sub
 
+
 # Third-party Imports
 from bs4 import BeautifulSoup
 from requests import get
 
 
 # Local source tree Imports
-from utils import read_subway_config
+from utils import (read_subway_config, Regex)
 
 
 class GetSubwayLineStatus(object):
@@ -37,7 +38,7 @@ class GetSubwayLineStatus(object):
                 if str(j) == string_to_find:
                     stat = i.findAll("td")[1]
                     stat = str(stat)
-                    stat = sub(r"<td>|<\/td>", "", stat)
+                    stat = sub(Regex.remove_td_html_tag(), "", stat)
                     return stat
         return None
 
@@ -109,7 +110,7 @@ class GetCPTMStatus(object):
                 if str(j) == string_to_find:
                     stat = i.findAll("td")[1]
                     stat = str(stat)
-                    stat = sub(r"<td>|<\/td>", "", stat)
+                    stat = sub(Regex.remove_td_html_tag(), "", stat)
                     return stat
         return None
 
