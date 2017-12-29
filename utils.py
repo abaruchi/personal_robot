@@ -73,7 +73,19 @@ class Regex(object):
     def remove_td_html_tag():
         return r'<td>|<\/td>'
 
+
 class Messages(object):
+
+    @staticmethod
+    def start_message(user):
+        part_01 = "Hello " + user.first_name + "!!!!" + "\n"
+
+        part_02 = """
+Im Marvin Bot and I live to serve my master... Artur Baruchi. If you want to 
+send him a message or to see my source code, please go to my master's git: 
+http://github.com/abaruchi.
+        """
+        return part_01 + part_02
 
     @staticmethod
     def metro_usage_help():
@@ -83,6 +95,7 @@ Usage:
     /metro all: informs status of all subway lines
     /metro azul: informs status of subway line blue
     /metro vermelha: informs status of subway line red
+    /metro amarela: informs status of subway line red
 """
         return msg
 

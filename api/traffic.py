@@ -12,3 +12,19 @@ from telegram import Update
 from utils import  read_googlemaps_config
 
 
+class TrafficInformation(object):
+    """
+
+    """
+
+    def __init__(self):
+        pass
+
+    def current_location(self):
+        pass
+
+    def time_to_home(self):
+        pass
+
+
+

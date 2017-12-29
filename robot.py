@@ -5,7 +5,8 @@
 
 
 # Third-party Imports
-from telegram.ext import (Updater, CommandHandler)
+from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters)
+from telegram import (KeyboardButton, ReplyKeyboardMarkup)
 
 
 # Local source tree Imports
@@ -14,10 +15,8 @@ from api.subway import (GetSubwayLineStatus, GetCPTMStatus)
 
 
 def start(bot, update):
-    message = 'Hello there, this is a particular Bot. My master is Artur ' \
-              'Baruchi. If you want to talk to him, please check his github (' \
-              'http://github.com/abaruchi). See you soon!'
-    update.message.reply_text(message)
+    user = update.message.from_user
+    update.message.reply_text(Messages.start_message(user))
 
 
 def metro(bot, update, args):
@@ -39,6 +38,27 @@ def metro(bot, update, args):
             bot.send_message(
                 chat_id=update.message.chat_id,
                 text=message)
+
+        elif args[0] == "azul":
+            stat = metro_stat.blue_line_status()
+            message = "Linha Azul: " + stat
+            bot.send_message(
+                chat_id=update.message.chat_id,
+                text=message)
+
+        elif args[0] == "vermelha":
+            stat = metro_stat.red_line_status()
+            message = "Linha Vermelha: " + stat
+            bot.send_message(
+                chat_id=update.message.chat_id,
+                text=message)
+
+        elif args[0] == "amarela":
+            stat = metro_stat.yellow_line_status()
+            message = "Linha Amarela: " + stat
+            bot.send_message(
+                chat_id=update.message.chat_id,
+                text=message)
     else:
         bot.send_message(chat_id=update.message.chat_id,
                 text=Messages.metro_usage_help())
@@ -57,16 +77,67 @@ def cptm(bot, update, args):
         cptm_stat = GetCPTMStatus()
         if args[0] == "all":
             msg_dict = cptm_stat.all_cptm_lines_status()
-            print(msg_dict)
             message = ""
             for line, status in msg_dict.items():
                 message = line + ": " + status + "\n" + message
             bot.send_message(
                 chat_id=update.message.chat_id,
                 text=message)
+        elif args[0] == "esmeralda":
+            stat = cptm_stat.esmeralda_line_status()
+            message = "Linha Esmeralda: " + stat
+            bot.send_message(
+                chat_id=update.message.chat_id,
+                text=message)
     else:
         bot.send_message(chat_id=update.message.chat_id,
                 text=Messages.cptm_usage_help())
+
+
+def test_loc(bot, update, args):
+    """
+
+    :param bot:
+    :param update:
+    :param args:
+    :return:
+    """
+    print("AAAA")
+    location_kb = KeyboardButton(text="send location",
+                                 request_location=True)
+    reply_markup = ReplyKeyboardMarkup(location_kb, one_time_keyboard=True)
+    update.message.reply_text(
+        "Would you mind sharing your location with me?",
+        reply_markup=reply_markup
+    )
+    # bot.sendMessage(
+    #     update.message.chat_id,
+    #     text='location',
+    #     reply_markup=ReplyKeyboardMarkup(
+    #         [[KeyboardButton("test", request_location=True)]],
+    #         one_time_keyboard=True
+    #     )
+    # )
+
+
+def entered_location(bot, update):
+    print(update.message.location.latitute)
+    print(update.message.location.longitude)
+
+    # location_kb = KeyboardButton(text="send location",
+    #                              request_location=True)
+    # contact_kb = KeyboardButton(text="send contact",
+    #                             request_contact=True)
+    #
+    # custom_kb = [
+    #     [location_kb, contact_kb]
+    # ]
+    # reply_markup = ReplyKeyboardMarkup(custom_kb)
+    # update.message.reply_text(
+    #     "Would you mind sharing your location and contact with me?",
+    #     reply_markup=reply_markup
+    # )
+
 
 def main():
     """Run bot."""
@@ -80,16 +151,10 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("metro", metro, pass_args=True))
     dp.add_handler(CommandHandler("cptm", cptm, pass_args=True))
+    dp.add_handler(CommandHandler("loc", test_loc, pass_args=True))
+    # dp.add_handler(MessageHandler(Filters.location, entered_location))
 
-    # dp.add_handler(CommandHandler("help", start))
-    # dp.add_handler(CommandHandler("set", set_timer,
-    #                               pass_args=True,
-    #                               pass_job_queue=True,
-    #                               pass_chat_data=True))
-    # dp.add_handler(CommandHandler("unset", unset, pass_chat_data=True))
 
-    # log all errors
-    # dp.add_error_handler(error)
 
     # Start the Bot
     updater.start_polling()
