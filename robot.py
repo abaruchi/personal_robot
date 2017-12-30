@@ -12,6 +12,7 @@ from telegram import (KeyboardButton, ReplyKeyboardMarkup)
 # Local source tree Imports
 from utils import (read_telegram_config, Messages)
 from api.subway import (GetSubwayLineStatus, GetCPTMStatus)
+from api.traffic import TrafficInformation
 
 
 def start(bot, update):
@@ -94,7 +95,7 @@ def cptm(bot, update, args):
                 text=Messages.cptm_usage_help())
 
 
-def test_loc(bot, update, args):
+def my_location_button(bot, update, args):
     """
 
     :param bot:
@@ -102,41 +103,33 @@ def test_loc(bot, update, args):
     :param args:
     :return:
     """
-    print("AAAA")
-    location_kb = KeyboardButton(text="send location",
-                                 request_location=True)
-    reply_markup = ReplyKeyboardMarkup(location_kb, one_time_keyboard=True)
-    update.message.reply_text(
-        "Would you mind sharing your location with me?",
-        reply_markup=reply_markup
+    bot.sendMessage(
+        update.message.chat_id,
+        text='Thanks! Press the button bellow and send me your location!',
+        reply_markup=ReplyKeyboardMarkup(
+            [[KeyboardButton("Send My Location", request_location=True)]],
+            one_time_keyboard=True
+        )
     )
-    # bot.sendMessage(
-    #     update.message.chat_id,
-    #     text='location',
-    #     reply_markup=ReplyKeyboardMarkup(
-    #         [[KeyboardButton("test", request_location=True)]],
-    #         one_time_keyboard=True
-    #     )
-    # )
 
 
-def entered_location(bot, update):
-    print(update.message.location.latitute)
-    print(update.message.location.longitude)
+def coordinates_to_address(bot, update):
+    gmaps = TrafficInformation()
+    latitude = update.message.location.latitude
+    longitude = update.message.location.longitude
 
-    # location_kb = KeyboardButton(text="send location",
-    #                              request_location=True)
-    # contact_kb = KeyboardButton(text="send contact",
-    #                             request_contact=True)
-    #
-    # custom_kb = [
-    #     [location_kb, contact_kb]
-    # ]
-    # reply_markup = ReplyKeyboardMarkup(custom_kb)
-    # update.message.reply_text(
-    #     "Would you mind sharing your location and contact with me?",
-    #     reply_markup=reply_markup
-    # )
+    coord_tuples = (latitude, longitude)
+    address = gmaps.current_address(coord_tuples)
+    #print(address)
+    addr_str_01 = "Your location is: \n"
+    addr_str_02 = address['street'] + ", " + address['number'] + " - " + \
+                  address['neibor'] + " - " + address['city'] + " - " + \
+                  address['country'] + " - " + address['postal_code'] + "\n"
+    cur_addr = addr_str_01 + addr_str_02
+    bot.sendMessage(
+        update.message.chat_id,
+        text=cur_addr
+    )
 
 
 def main():
@@ -151,10 +144,10 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("metro", metro, pass_args=True))
     dp.add_handler(CommandHandler("cptm", cptm, pass_args=True))
-    dp.add_handler(CommandHandler("loc", test_loc, pass_args=True))
-    # dp.add_handler(MessageHandler(Filters.location, entered_location))
-
-
+    dp.add_handler(CommandHandler("mylocation",
+                                  my_location_button,
+                                  pass_args=True))
+    dp.add_handler(MessageHandler(Filters.location, coordinates_to_address))
 
     # Start the Bot
     updater.start_polling()
