@@ -120,7 +120,6 @@ def coordinates_to_address(bot, update):
 
     coord_tuples = (latitude, longitude)
     address = gmaps.current_address(coord_tuples)
-    #print(address)
     addr_str_01 = "Your location is: \n"
     addr_str_02 = address['street'] + ", " + address['number'] + " - " + \
                   address['neibor'] + " - " + address['city'] + " - " + \
@@ -129,6 +128,48 @@ def coordinates_to_address(bot, update):
     bot.sendMessage(
         update.message.chat_id,
         text=cur_addr
+    )
+
+
+def go_home(bot, update):
+    """
+
+    :param bot:
+    :param update:
+    :return:
+    """
+    gmaps = TrafficInformation()
+    tf_dict = gmaps.home_and_work_info()
+
+    message_str_01 = "Work to Home information:\n"
+    message_str_02 = "Distance: " + tf_dict['distance'] + "\n"
+    message_str_03 = "Time: " + tf_dict['duration']
+
+    cur_info = message_str_01 + message_str_02 + message_str_03
+    bot.sendMessage(
+        update.message.chat_id,
+        text=cur_info
+    )
+
+
+def go_work(bot, update):
+    """
+
+    :param bot:
+    :param update:
+    :return:
+    """
+    gmaps = TrafficInformation()
+    tf_dict = gmaps.home_and_work_info(to_home=False)
+
+    message_str_01 = "Home to Work information:\n"
+    message_str_02 = "Distance: " + tf_dict['distance'] + "\n"
+    message_str_03 = "Time: " + tf_dict['duration']
+
+    cur_info = message_str_01 + message_str_02 + message_str_03
+    bot.sendMessage(
+        update.message.chat_id,
+        text=cur_info
     )
 
 
@@ -144,6 +185,9 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("metro", metro, pass_args=True))
     dp.add_handler(CommandHandler("cptm", cptm, pass_args=True))
+    dp.add_handler(CommandHandler("gohome", go_home))
+    dp.add_handler(CommandHandler("gowork", go_work))
+
     dp.add_handler(CommandHandler("mylocation",
                                   my_location_button,
                                   pass_args=True))

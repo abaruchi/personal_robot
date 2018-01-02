@@ -20,6 +20,8 @@ class TrafficInformation(object):
     def __init__(self):
         gmaps_conf = read_googlemaps_config("config.ini")
         self.gmaps = Client(key=gmaps_conf["token"])
+        self.home = gmaps_conf["home"]
+        self.work = gmaps_conf["work"]
 
     def current_address(self, gl_tuple):
         """
@@ -45,8 +47,31 @@ class TrafficInformation(object):
 
         return adress_dict
 
-    def time_to_home(self):
-        pass
+    def home_and_work_info(self, to_home=True):
+        """
 
+        :param to_home:
+        :return:
+        """
+        info_dict = dict()
+
+        if to_home:
+            destination, departure = self.home, self.work
+        else:
+            destination, departure = self.work, self.home
+
+        # now = datetime.now()
+
+        dt_info = self.gmaps.directions(
+            departure,
+            destination
+        )
+        info_dict['distance'] = dt_info[0]['legs'][0]['distance']['text']
+        info_dict['duration'] = dt_info[0]['legs'][0]['duration']['text']
+
+        return info_dict
+
+    def time_to_somewhere(self):
+        pass
 
 
