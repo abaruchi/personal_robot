@@ -45,7 +45,7 @@ class TrafficInformation(object):
             if addr_data['types'][0] == 'postal_code':
                 adress_dict['postal_code'] = addr_data['long_name']
 
-        return
+        return adress_dict
 
     def home_and_work_info(self, to_home=True):
         """
