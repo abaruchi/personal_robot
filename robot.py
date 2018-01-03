@@ -5,14 +5,65 @@
 
 
 # Third-party Imports
-from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters)
-from telegram import (KeyboardButton, ReplyKeyboardMarkup)
+from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
+                          ConversationHandler, RegexHandler)
+from telegram import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove)
 
 
 # Local source tree Imports
 from utils import (read_telegram_config, Messages)
 from api.subway import (GetSubwayLineStatus, GetCPTMStatus)
 from api.traffic import TrafficInformation
+
+MY_LOCATION = 1
+
+
+# Routines to handle Location
+def lets_go(bot, update):
+    """
+
+    :param bot:
+    :param update:
+    :return:
+    """
+    message = """
+Here we go again... Dude, I dont have a crystal ball!\n
+Send me your location, before I give up helping you...\n    
+    """
+
+    bot.sendMessage(
+        update.message.chat_id,
+        text=message,
+        reply_markup=ReplyKeyboardMarkup(
+            [[KeyboardButton("Send My Location", request_location=True)]],
+            one_time_keyboard=True
+        )
+    )
+    return MY_LOCATION
+
+
+def my_current_address(bot, update):
+    print("CCC")
+    gmaps = TrafficInformation()
+    latitude = update.message.location.latitude
+    longitude = update.message.location.longitude
+
+    coord_tuples = (latitude, longitude)
+    address = gmaps.current_address(coord_tuples)
+    addr_01 = address['street'] + "," + address['number'] + "-" + \
+              address['neibor']
+    print("BBB")
+    print(addr_01)
+    return ConversationHandler.END
+
+
+def cancel(bot, update):
+    update.message.reply_text('Shit.. I always waste my time with you.. ',
+                              reply_markup=ReplyKeyboardRemove())
+
+    return ConversationHandler.END
+
+###############################
 
 
 def start(bot, update):
@@ -129,6 +180,7 @@ def coordinates_to_address(bot, update):
         update.message.chat_id,
         text=cur_addr
     )
+    return ConversationHandler.END
 
 
 def go_home(bot, update):
@@ -192,6 +244,16 @@ def main():
                                   my_location_button,
                                   pass_args=True))
     dp.add_handler(MessageHandler(Filters.location, coordinates_to_address))
+
+    conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('letsgo', lets_go)],
+        states={
+            MY_LOCATION: [MessageHandler(Filters.location,
+                                         my_current_address)]
+        },
+        fallbacks=[CommandHandler('done', cancel)]
+    )
+    dp.add_handler(conv_handler)
 
     # Start the Bot
     updater.start_polling()

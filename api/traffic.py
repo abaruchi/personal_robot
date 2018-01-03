@@ -45,7 +45,7 @@ class TrafficInformation(object):
             if addr_data['types'][0] == 'postal_code':
                 adress_dict['postal_code'] = addr_data['long_name']
 
-        return adress_dict
+        return
 
     def home_and_work_info(self, to_home=True):
         """
@@ -71,7 +71,20 @@ class TrafficInformation(object):
 
         return info_dict
 
-    def time_to_somewhere(self):
-        pass
+    def time_to_somewhere(self, from_addr, to_addr):
+        """
+
+        :param from_addr:
+        :param to_addr:
+        :return:
+        """
+        info_dict = dict()
+
+
+
+
+
+
+
 
 

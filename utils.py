@@ -81,9 +81,10 @@ class Messages(object):
         part_01 = "Hello " + user.first_name + "!!!!" + "\n"
 
         part_02 = """
-Im Marvin Bot and I live to serve my master... Artur Baruchi. If you want to 
-send him a message or to see my source code, please go to my master's git: 
-http://github.com/abaruchi.
+Hi man.. here is the deal.. Im a robot and don't like you. My master is a guy, 
+called Artur Baruchi. If you want to see some of his shits, including me, 
+you can check his git at http://github.com/abaruchi. So get out or ask me some
+questions..
         """
         return part_01 + part_02
 
