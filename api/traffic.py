@@ -60,14 +60,16 @@ class TrafficInformation(object):
         else:
             destination, departure = self.work, self.home
 
-        # now = datetime.now()
+        now = datetime.now()
 
         dt_info = self.gmaps.directions(
             departure,
-            destination
+            destination,
+            mode='driving',
+            departure_time=now
         )
         info_dict['distance'] = dt_info[0]['legs'][0]['distance']['text']
-        info_dict['duration'] = dt_info[0]['legs'][0]['duration']['text']
+        info_dict['duration'] = dt_info[0]['legs'][0]['duration_in_traffic']['text']
 
         return info_dict
 
@@ -78,13 +80,16 @@ class TrafficInformation(object):
         :param to_addr:
         :return:
         """
+
+        now = datetime.now()
         info_dict = dict()
+        dt_info = self.gmaps.directions(
+            from_addr,
+            to_addr,
+            mode='driving',
+            departure_time=now
+        )
+        info_dict['distance'] = dt_info[0]['legs'][0]['distance']['text']
+        info_dict['duration'] = dt_info[0]['legs'][0]['duration_in_traffic']['text']
 
-
-
-
-
-
-
-
-
+        return info_dict
