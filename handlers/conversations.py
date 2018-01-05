@@ -51,10 +51,9 @@ def my_current_address(bot, update, user_data):
 
     user_data['my_location'] = addr_01
 
-    message = """
-Right.. Now I know where you are Genius.. So, tell me the another address\n
-And please.. write this shit right, I don't give a shit if you write this wrong
-            """
+    message = "Right.. Now I know where you are Genius.. So, tell me the " \
+              "another address. And please.. write this shit right, I don't " \
+              "give a shit if you write this wrong"
     bot.sendMessage(
         update.message.chat_id,
         text=message
@@ -64,10 +63,9 @@ And please.. write this shit right, I don't give a shit if you write this wrong
 
 def my_other_address(bot, update, user_data):
     user_data['other_location'] = update.message.text
-    message = """
-Ok Dude, we are almost there.. So, you want to go FROM your current location 
-or TO your location.. Tip for you idiot:\n answer FROM or TO
-"""
+    message = "Ok Dude, we are almost there.. So, you want to go FROM your " \
+              "current location or TO your location.. " \
+              "Tip for you idiot:\n answer FROM or TO"
     bot.sendMessage(
         update.message.chat_id,
         text=message
@@ -88,10 +86,8 @@ def my_directions(bot, update, user_data):
         from_loc = user_data['other_location']
         to_loc = user_data['my_location']
     else:
-        bye_message = """
-Oh GOD! You need just to write FROM or TO.. and you can't.. See you later 
-bitch, Im done here...
-        """
+        bye_message = "Oh GOD! You need just to write FROM or TO.. " \
+                      "and you can't.. See you later bitch, Im done here..."
         bot.sendMessage(
             update.message.chat_id,
             text=bye_message
@@ -99,7 +95,8 @@ bitch, Im done here...
 
         return ConversationHandler.END
 
-    message_part_01 = "So, you want to go from:\n " + from_loc + "\n" + "to \n" + to_loc
+    message_part_01 = "So, you want to go FROM:\n " + from_loc + "\n" +\
+                      "TO: \n" + to_loc
     bot.sendMessage(
         update.message.chat_id,
         text=message_part_01
