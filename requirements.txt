@@ -3,3 +3,5 @@
 googlemaps
 bs4
 requests
+darkskylib
+python-forecastio

@@ -2,13 +2,12 @@
 """
 
 # System Imports
-from re import (match, compile, IGNORECASE)
+from re import IGNORECASE, compile, match
 from time import sleep
 
+from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
 # Third-party Imports
 from telegram.ext import ConversationHandler
-from telegram import (KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove)
-
 
 # Local source tree Imports
 from api.traffic import TrafficInformation

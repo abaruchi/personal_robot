@@ -2,14 +2,8 @@
 organized
 """
 
-# System Imports
+
 import configparser
-
-
-# Third-party Imports
-
-
-# Local source tree Imports
 
 
 def read_telegram_config (config_file_path):
@@ -65,6 +59,24 @@ def read_subway_config(config_file_path):
         subway_conf_dict[option] = Conf.get("Subway", option)
 
     return subway_conf_dict
+
+
+def read_weather_config(config_file_path):
+    """
+
+    :param config_file_path:
+    :return:
+    """
+
+    weather_conf_dict = dict()
+    Conf = configparser.ConfigParser()
+    Conf.read(config_file_path)
+
+    options = Conf.options("Weather")
+    for option in options:
+        weather_conf_dict[option] = Conf.get("Weather", option)
+
+    return weather_conf_dict
 
 
 class Regex(object):

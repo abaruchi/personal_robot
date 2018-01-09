@@ -1,15 +1,9 @@
 """
 """
 
-# System Imports
-
-
-# Third-party Imports
-
-
-# Local source tree Imports
-from utils import Messages
 from api.traffic import TrafficInformation
+
+from utils import Messages
 
 
 def start(bot, update):

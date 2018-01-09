@@ -1,17 +1,12 @@
 """ This script is related to the subway API connection and queries
 """
 
-# System Imports
 from re import sub
 
-
-# Third-party Imports
 from bs4 import BeautifulSoup
 from requests import get
 
-
-# Local source tree Imports
-from utils import (read_subway_config, Regex)
+from utils import Regex, read_subway_config
 
 
 class GetSubwayLineStatus(object):

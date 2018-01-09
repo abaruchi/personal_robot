@@ -1,17 +1,12 @@
 """
 """
 
-# System Imports
+from telegram import KeyboardButton, ReplyKeyboardMarkup
 
-
-# Third-party Imports
-from telegram import (KeyboardButton, ReplyKeyboardMarkup)
-
-
-# Local source tree Imports
-from utils import Messages
-from api.subway import (GetSubwayLineStatus, GetCPTMStatus)
+from api.subway import GetCPTMStatus, GetSubwayLineStatus
 from api.traffic import TrafficInformation
+
+from utils import Messages
 
 
 def start(bot, update):
@@ -152,4 +147,3 @@ def go_work(bot, update):
         update.message.chat_id,
         text=cur_info
     )
-

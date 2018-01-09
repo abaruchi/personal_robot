@@ -1,19 +1,11 @@
 """ This script is related to the telegram API connection and commands
 """
 
-# System Imports
+from telegram.ext import (CommandHandler, ConversationHandler, Filters,
+                          MessageHandler, Updater)
 
-
-# Third-party Imports
-from telegram.ext import (Updater, CommandHandler, MessageHandler, Filters,
-                          ConversationHandler)
-
-
-# Local source tree Imports
+from handlers import commands, conversations, messages
 from utils import read_telegram_config
-from handlers import commands, messages, conversations
-
-
 
 ###############################
 

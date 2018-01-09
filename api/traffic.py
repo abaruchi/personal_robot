@@ -1,14 +1,10 @@
 """ This script is related to the traffic API connection and queries
 """
 
-# System Imports
 from datetime import datetime
 
-# Third-party Imports
 from googlemaps import Client
 
-
-# Local source tree Imports
 from utils import read_googlemaps_config
 
 
