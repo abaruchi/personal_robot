@@ -2,7 +2,7 @@
 """
 
 # System Imports
-from re import IGNORECASE, compile, match
+from re import IGNORECASE, compile
 from time import sleep
 
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
@@ -138,4 +138,69 @@ def cancel(bot, update):
     update.message.reply_text('Shit.. I always waste my time with you.. ',
                               reply_markup=ReplyKeyboardRemove())
 
+    return ConversationHandler.END
+
+##############
+
+
+PLACE, INFO, GRANULARITY = range(3)
+
+reply_place_keyboard = [['Home', 'Work'],
+                        [KeyboardButton("Send My Location",
+                                        request_location=True)]]
+markup_place = ReplyKeyboardMarkup(reply_place_keyboard,
+                                   one_time_keyboard=True)
+
+reply_gran_keyboard = [['This Hour', 'Next 6 Hours']]
+markup_gran = ReplyKeyboardMarkup(reply_gran_keyboard,
+                                  one_time_keyboard=True)
+
+
+def crazy_weather(bot, update):
+    """
+
+    :param bot:
+    :param update:
+    :return:
+    """
+    message = \
+    """
+    So, do you wanna know about the Weather.. From where do you wanna know?    
+    """
+
+    update.message.reply_text(
+        text=message,
+        reply_markup=markup_place)
+
+    return PLACE
+
+def my_places(bot, update, user_data):
+    """
+
+    :param bot:
+    :param update:
+    :param user_data:
+    :return:
+    """
+    text = update.message.text
+    user_data['choice'] = text
+    print("oops entered on my_places")
+    print("You Chose {}".format(user_data['choice']))
+    return ConversationHandler.END
+
+
+def my_cur_location(bot, update, user_data):
+    """
+
+    :param bot:
+    :param update:
+    :param user_data:
+    :return:
+    """
+    user_data['latitude'] = float(update.message.location.latitude)
+    user_data['longitude'] = float(update.message.location.longitude)
+
+    print("oops entered on my_test")
+    print("Your Location {} {}".format(user_data['latitude'],
+                                       user_data['longitude']))
     return ConversationHandler.END

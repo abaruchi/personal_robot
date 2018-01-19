@@ -2,7 +2,7 @@
 """
 
 from telegram.ext import (CommandHandler, ConversationHandler, Filters,
-                          MessageHandler, Updater)
+                          MessageHandler, Updater, RegexHandler)
 
 from handlers import commands, conversations, messages
 from utils import read_telegram_config
@@ -18,7 +18,28 @@ def main():
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
-    conv_handler = ConversationHandler(
+    weather_conv_handler = ConversationHandler(
+        entry_points=[CommandHandler('weather', conversations.crazy_weather)],
+        states={
+            conversations.PLACE:
+                [RegexHandler('^(Home|Work)$',
+                                conversations.my_places,
+                                pass_user_data=True),
+                MessageHandler(Filters.location,
+                               conversations.my_cur_location,
+                               pass_user_data=True)],
+            conversations.INFO:
+                []
+        },
+        fallbacks=[CommandHandler('done', conversations.cancel)]
+    )
+    dp.add_handler(weather_conv_handler)
+
+
+
+
+
+    traffic_conv_handler = ConversationHandler(
         entry_points=[CommandHandler('letsgo', conversations.lets_go)],
         states={
             conversations.MY_LOCATION:
@@ -36,7 +57,7 @@ def main():
         },
         fallbacks=[CommandHandler('done', conversations.cancel)]
     )
-    dp.add_handler(conv_handler)
+    dp.add_handler(traffic_conv_handler)
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", commands.start))
