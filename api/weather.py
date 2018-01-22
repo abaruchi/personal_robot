@@ -18,17 +18,17 @@ class WeatherInformation(object):
         self.weather_key = weather_conf["token"]
 
         if lat is None or long is None:
-            if defaultplace == "home":
+            if defaultplace == "Home":
                 if "home_coordinates" in weather_conf.keys():
                     home_coordinates = weather_conf["home_coordinates"]
                     lat, long = map(float, home_coordinates.split(','))
                     self.latitute, self.longitute = lat, long
 
-            elif defaultplace == "work":
+            elif defaultplace == "Work":
                 if "work_coordinates" in weather_conf.keys():
                     work_coordinates = weather_conf["work_coordinates"]
                     lat, long = map(float, work_coordinates.split(','))
-                    self.latitute, sel.longitute = lat, long
+                    self.latitute, self.longitute = lat, long
         else:
             self.latitute, self.longitute = lat, long
         self.unit = 'si'
@@ -50,7 +50,7 @@ class WeatherInformation(object):
         :return:
 
         """
-        forecast = self._forecast_init()
+        forecast = self.__forecast_init()
         forecast_current = forecast.currently()
         return forecast_current.precipProbability
 
@@ -59,7 +59,7 @@ class WeatherInformation(object):
 
         :return:
         """
-        forecast = self._forecast_init()
+        forecast = self.__forecast_init()
         forecast_current = forecast.currently()
         return forecast_current.summary
 
@@ -69,7 +69,7 @@ class WeatherInformation(object):
         :return:
         """
         prob_dict = dict()
-        forecast = self._forecast_init()
+        forecast = self.__forecast_init()
         forecast_daily = forecast.hourly()
 
         for h in forecast_daily.data[0:6]:
@@ -83,7 +83,7 @@ class WeatherInformation(object):
         :return:
         """
         summ_dict = dict()
-        forecast = self._forecast_init()
+        forecast = self.__forecast_init()
         forecast_daily = forecast.hourly()
 
         for h in forecast_daily.data[0:6]:

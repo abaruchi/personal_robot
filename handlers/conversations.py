@@ -11,6 +11,7 @@ from telegram.ext import ConversationHandler
 
 # Local source tree Imports
 from api.traffic import TrafficInformation
+from api.weather import WeatherInformation
 
 MY_LOCATION, OTHER_LOCATION, DIRECTION = range(3)
 
@@ -174,6 +175,7 @@ def crazy_weather(bot, update):
 
     return PLACE
 
+
 def my_places(bot, update, user_data):
     """
 
@@ -184,9 +186,19 @@ def my_places(bot, update, user_data):
     """
     text = update.message.text
     user_data['choice'] = text
-    print("oops entered on my_places")
-    print("You Chose {}".format(user_data['choice']))
-    return ConversationHandler.END
+    forecast = WeatherInformation(defaultplace=text)
+    user_data['forecast_obj'] = forecast
+
+    message = \
+    """
+    Do you wanna know the forecast for next 6 hours or just for now?    
+    """
+
+    update.message.reply_text(
+        text=message,
+        reply_markup=markup_gran)
+
+    return INFO
 
 
 def my_cur_location(bot, update, user_data):
@@ -199,8 +211,60 @@ def my_cur_location(bot, update, user_data):
     """
     user_data['latitude'] = float(update.message.location.latitude)
     user_data['longitude'] = float(update.message.location.longitude)
+    user_data['forecast_obj'] = WeatherInformation(lat=user_data['latitude'],
+                                               long=user_data['longitude'])
 
-    print("oops entered on my_test")
-    print("Your Location {} {}".format(user_data['latitude'],
-                                       user_data['longitude']))
+    message = \
+    """
+    Do you wanna know the forecast for next 6 hours or just for now?    
+    """
+
+    update.message.reply_text(
+        text=message,
+        reply_markup=markup_gran)
+
+    return INFO
+
+
+def info_test(bot, update, user_data):
+    """
+
+    :param bot:
+    :param update:
+    :param user_data:
+    :return:
+    """
+    forecast = user_data['forecast_obj']
+    text = update.message.text
+    if text == "This Hour":
+        text_01 = "Current prob rain is {}".format(
+            forecast.get_current_rain_probability())
+        text_02 = "Weather Summary:\n{}".format(forecast.get_current_summary())
+
+        bot.sendMessage(
+            update.message.chat_id,
+            text=text_01
+        )
+        sleep(2)
+        bot.sendMessage(
+            update.message.chat_id,
+            text=text_02
+        )
+
+    else:
+        rain_prob = forecast.get_hour_rain_probability()
+        weather_summ = forecast.get_hour_summary()
+        for hour in rain_prob.keys():
+            text_01 = "{} rain prob is {}".format(hour, rain_prob[hour])
+            text_02 = "Summary:\n{}".format(weather_summ[hour])
+            bot.sendMessage(
+                update.message.chat_id,
+                text=text_01
+            )
+            bot.sendMessage(
+                update.message.chat_id,
+                text=text_02
+            )
+            sleep(2)
+
     return ConversationHandler.END

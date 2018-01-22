@@ -29,7 +29,9 @@ def main():
                                conversations.my_cur_location,
                                pass_user_data=True)],
             conversations.INFO:
-                []
+                [RegexHandler('^(This Hour|Next 6 Hours)$',
+                              conversations.info_test,
+                              pass_user_data=True)],
         },
         fallbacks=[CommandHandler('done', conversations.cancel)]
     )
