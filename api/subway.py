@@ -6,7 +6,7 @@ from re import sub
 from bs4 import BeautifulSoup
 from requests import get
 
-from utils import Regex, read_subway_config
+from utils import Regex, ConfigRead
 
 
 class GetSubwayLineStatus(object):
@@ -16,7 +16,8 @@ class GetSubwayLineStatus(object):
 
     def __init__(self):
 
-        url_to_read = read_subway_config("config.ini")
+        config_read = ConfigRead("config.ini")
+        url_to_read = config_read.read_subway_config()
         resp = get(url_to_read["metro"], verify=False)
         self.bsObj = BeautifulSoup(resp.content)
 

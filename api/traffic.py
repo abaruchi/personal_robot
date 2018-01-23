@@ -5,7 +5,7 @@ from datetime import datetime
 
 from googlemaps import Client
 
-from utils import read_googlemaps_config
+from utils import ConfigRead
 
 
 class TrafficInformation(object):
@@ -14,7 +14,8 @@ class TrafficInformation(object):
     """
 
     def __init__(self):
-        gmaps_conf = read_googlemaps_config("config.ini")
+        config_read = ConfigRead("config.ini")
+        gmaps_conf = config_read.read_googlemaps_config()
         self.gmaps = Client(key=gmaps_conf["token"])
         self.home = gmaps_conf["home"]
         self.work = gmaps_conf["work"]

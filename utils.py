@@ -6,77 +6,85 @@ organized
 import configparser
 
 
-def read_telegram_config (config_file_path):
-    """
-    This routine reads section related to Telegram Robot
+class ConfigRead(object):
 
-    :param config_file_path: The file path where all configuration is located
-    :return: A dict with configurations options
-    """
-    telegram_conf_dict = dict()
+    def __init__(self, config_file_path):
+        self.Conf = configparser.ConfigParser()
+        self.Conf.read(config_file_path)
 
-    Conf = configparser.ConfigParser()
-    Conf.read(config_file_path)
+    def read_telegram_config (self):
+        """
+        This routine reads section related to Telegram Robot
 
-    options = Conf.options("Telegram")
-    for option in options:
-        telegram_conf_dict[option] = Conf.get("Telegram", option)
+        :param config_file_path: The file path where all configuration is located
+        :return: A dict with configurations options
+        """
+        telegram_conf_dict = dict()
 
-    return telegram_conf_dict
+        options = self.Conf.options("Telegram")
+        for option in options:
+            telegram_conf_dict[option] = self.Conf.get("Telegram", option)
 
+        return telegram_conf_dict
 
-def read_googlemaps_config(config_file_path):
-    """
+    def read_googlemaps_config(self):
+        """
 
-    :param config_file_path:
-    :return:
-    """
+        :param config_file_path:
+        :return:
+        """
 
-    googlemaps_conf_dict = dict()
-    Conf = configparser.ConfigParser()
-    Conf.read(config_file_path)
+        googlemaps_conf_dict = dict()
 
-    options = Conf.options("GoogleMaps")
-    for option in options:
-        googlemaps_conf_dict[option] = Conf.get("GoogleMaps", option)
+        options = self.Conf.options("GoogleMaps")
+        for option in options:
+            googlemaps_conf_dict[option] = self.Conf.get("GoogleMaps", option)
 
-    return googlemaps_conf_dict
+        return googlemaps_conf_dict
 
+    def read_subway_config(self):
+        """
 
-def read_subway_config(config_file_path):
-    """
+        :param config_file_path:
+        :return:
+        """
+        subway_conf_dict = dict()
 
-    :param config_file_path:
-    :return:
-    """
+        options = self.Conf.options("Subway")
+        for option in options:
+            subway_conf_dict[option] = self.Conf.get("Subway", option)
 
-    subway_conf_dict = dict()
-    Conf = configparser.ConfigParser()
-    Conf.read(config_file_path)
+        return subway_conf_dict
 
-    options = Conf.options("Subway")
-    for option in options:
-        subway_conf_dict[option] = Conf.get("Subway", option)
+    def read_weather_config(self):
+        """
 
-    return subway_conf_dict
+        :param config_file_path:
+        :return:
+        """
 
+        weather_conf_dict = dict()
 
-def read_weather_config(config_file_path):
-    """
+        options = self.Conf.options("Weather")
+        for option in options:
+            weather_conf_dict[option] = self.Conf.get("Weather", option)
 
-    :param config_file_path:
-    :return:
-    """
+        return weather_conf_dict
 
-    weather_conf_dict = dict()
-    Conf = configparser.ConfigParser()
-    Conf.read(config_file_path)
+    def read_global_config(self):
+        """
 
-    options = Conf.options("Weather")
-    for option in options:
-        weather_conf_dict[option] = Conf.get("Weather", option)
+        :param config_file_path:
+        :return:
+        """
 
-    return weather_conf_dict
+        global_conf_dict = dict()
+
+        options = self.Conf.options("Bot")
+        for option in options:
+            global_conf_dict[option] = self.Conf.get("Bot", option)
+
+        return global_conf_dict
 
 
 class Regex(object):

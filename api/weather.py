@@ -3,7 +3,7 @@
 
 from forecastio import load_forecast
 
-from utils import Regex, read_weather_config
+from utils import ConfigRead
 
 
 class WeatherInformation(object):
@@ -12,19 +12,21 @@ class WeatherInformation(object):
     """
 
     def __init__(self, lat=None, long=None, defaultplace=None):
-        weather_conf = read_weather_config("config.ini")
-        self.weather_key = weather_conf["token"]
+
+        config_read = ConfigRead("config.ini")
+        self.weather_conf = config_read.read_weather_config()
+        self.weather_key = self.weather_conf["token"]
 
         if lat is None or long is None:
             if defaultplace == "Home":
-                if "home_coordinates" in weather_conf.keys():
-                    home_coordinates = weather_conf["home_coordinates"]
+                if "home_coordinates" in self.weather_conf.keys():
+                    home_coordinates = self.weather_conf["home_coordinates"]
                     lat, long = map(float, home_coordinates.split(','))
                     self.latitute, self.longitute = lat, long
 
             elif defaultplace == "Work":
-                if "work_coordinates" in weather_conf.keys():
-                    work_coordinates = weather_conf["work_coordinates"]
+                if "work_coordinates" in self.weather_conf.keys():
+                    work_coordinates = self.weather_conf["work_coordinates"]
                     lat, long = map(float, work_coordinates.split(','))
                     self.latitute, self.longitute = lat, long
         else:

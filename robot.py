@@ -5,14 +5,13 @@ from telegram.ext import (CommandHandler, ConversationHandler, Filters,
                           MessageHandler, RegexHandler, Updater)
 
 from handlers import commands, conversations, messages
-from utils import read_telegram_config
-
-###############################
+from utils import ConfigRead
 
 
 def main():
     """Run bot."""
-    telegram_conf = read_telegram_config("config.ini")
+    config_read = ConfigRead("config.ini")
+    telegram_conf = config_read.read_telegram_config()
     updater = Updater(telegram_conf["token"])
 
     conv_traffic = conversations.Location()
