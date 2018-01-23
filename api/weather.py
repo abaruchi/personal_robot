@@ -1,8 +1,6 @@
 """ This script is related to the weather API connection and queries
 """
 
-from datetime import datetime
-
 from forecastio import load_forecast
 
 from utils import Regex, read_weather_config

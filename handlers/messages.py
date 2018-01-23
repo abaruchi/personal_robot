@@ -2,7 +2,6 @@
 """
 
 from api.traffic import TrafficInformation
-
 from utils import Messages
 
 

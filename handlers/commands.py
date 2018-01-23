@@ -5,7 +5,6 @@ from telegram import KeyboardButton, ReplyKeyboardMarkup
 
 from api.subway import GetCPTMStatus, GetSubwayLineStatus
 from api.traffic import TrafficInformation
-
 from utils import Messages
 
 
