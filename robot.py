@@ -2,7 +2,7 @@
 """
 
 from telegram.ext import (CommandHandler, ConversationHandler, Filters,
-                          MessageHandler, Updater, RegexHandler)
+                          MessageHandler, RegexHandler, Updater)
 
 from handlers import commands, conversations, messages
 from utils import read_telegram_config
@@ -15,49 +15,48 @@ def main():
     telegram_conf = read_telegram_config("config.ini")
     updater = Updater(telegram_conf["token"])
 
+    conv_traffic = conversations.Location()
+    conv_weather = conversations.Weather()
+
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
     weather_conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('weather', conversations.crazy_weather)],
+        entry_points=[CommandHandler('weather', conv_weather.crazy_weather)],
         states={
-            conversations.PLACE:
+            conv_weather.PLACE:
                 [RegexHandler('^(Home|Work)$',
-                                conversations.my_places,
+                              conv_weather.my_places,
                                 pass_user_data=True),
                 MessageHandler(Filters.location,
-                               conversations.my_cur_location,
+                               conv_weather.my_cur_location,
                                pass_user_data=True)],
-            conversations.INFO:
+            conv_weather.INFO:
                 [RegexHandler('^(This Hour|Next 6 Hours)$',
-                              conversations.info_test,
+                              conv_weather.info_test,
                               pass_user_data=True)],
         },
-        fallbacks=[CommandHandler('done', conversations.cancel)]
+        fallbacks=[CommandHandler('done', conv_weather.cancel)]
     )
     dp.add_handler(weather_conv_handler)
 
-
-
-
-
     traffic_conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('letsgo', conversations.lets_go)],
+        entry_points=[CommandHandler('letsgo', conv_traffic.lets_go)],
         states={
-            conversations.MY_LOCATION:
+            conv_traffic.MY_LOCATION:
                 [MessageHandler(Filters.location,
-                                conversations.my_current_address,
+                                conv_traffic.my_current_address,
                                 pass_user_data=True)],
-            conversations.OTHER_LOCATION:
+            conv_traffic.OTHER_LOCATION:
                 [MessageHandler(Filters.text,
-                               conversations.my_other_address,
+                                conv_traffic.my_other_address,
                                pass_user_data=True)],
-            conversations.DIRECTION:
+            conv_traffic.DIRECTION:
                 [MessageHandler(Filters.text,
-                                conversations.my_directions,
+                                conv_traffic.my_directions,
                                 pass_user_data=True)]
         },
-        fallbacks=[CommandHandler('done', conversations.cancel)]
+        fallbacks=[CommandHandler('done', conv_traffic.cancel)]
     )
     dp.add_handler(traffic_conv_handler)
 
