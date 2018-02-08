@@ -42,6 +42,19 @@ class ConfigRead(object):
 
         return googlemaps_conf_dict
 
+    def read_cet_config(self):
+        """
+
+        :return:
+        """
+        cet_conf_dict = dict()
+
+        options = self.Conf.options("CET")
+        for option in options:
+            cet_conf_dict[option] = self.Conf.get("CET", option)
+
+        return cet_conf_dict
+
     def read_subway_config(self):
         """
 
@@ -92,6 +105,14 @@ class Regex(object):
     @staticmethod
     def remove_td_html_tag():
         return r'<td>|<\/td>'
+
+    @staticmethod
+    def get_tendency():
+        return r'title=\"(\w*)\"'
+
+    @staticmethod
+    def remove_bold_html_tag():
+        return r"\<b\>(\d+)\<\/b\>"
 
 
 class Messages(object):

@@ -2,10 +2,14 @@
 """
 
 from datetime import datetime
+from re import findall
+from urllib import request
 
+from bs4 import BeautifulSoup
 from googlemaps import Client
+from requests import get
 
-from utils import ConfigRead
+from utils import ConfigRead, Regex
 
 
 class TrafficInformation(object):
@@ -90,3 +94,43 @@ class TrafficInformation(object):
         info_dict['duration'] = dt_info[0]['legs'][0]['duration_in_traffic']['text']
 
         return info_dict
+
+
+class TrafficNow(object):
+    """
+
+    """
+    def __init__(self):
+        config_read = ConfigRead("config.ini")
+        cet_conf = config_read.read_cet_config()
+        cet_url = cet_conf["traffic_url"]
+        resp = get(cet_url, verify=False)
+        self.bsObj = BeautifulSoup(resp.content, "html.parser")
+        self.cet_graph = cet_conf["traffic_slowness"]
+
+    def get_total_traffic(self):
+        """
+
+        :return:
+        """
+
+        total = self.bsObj.findAll("div")[8].findNext()
+        return findall(Regex.remove_bold_html_tag(), str(total))[0]
+
+    def get_tendency(self):
+        """
+
+        :return:
+        """
+        tendency = self.bsObj.findAll("div")[10].findAll("img")[0]
+        return findall(Regex.get_tendency(), str(tendency))[0]
+
+    def get_cet_graph(self):
+        """
+
+        :return:
+        """
+
+        file_name = "/tmp/cet_graph" + ".jpg"
+        request.urlretrieve(self.cet_graph, file_name)
+        return file_name

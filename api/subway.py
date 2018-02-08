@@ -89,7 +89,7 @@ class GetCPTMStatus(object):
 
     def __init__(self):
 
-        url_to_read = read_subway_config("config.ini")
+        url_to_read = ConfigRead.read_subway_config("config.ini")
         resp = get(url_to_read["cptm"], verify=False)
         self.bsObj = BeautifulSoup(resp.content)
 
