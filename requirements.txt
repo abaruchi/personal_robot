@@ -5,3 +5,4 @@ bs4
 requests
 darkskylib
 python-forecastio
+aenum
