@@ -61,8 +61,7 @@ def main():
 
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", commands.start))
-    dp.add_handler(CommandHandler("metro", commands.metro, pass_args=True))
-    dp.add_handler(CommandHandler("cptm", commands.cptm, pass_args=True))
+    dp.add_handler(CommandHandler("lines", commands.line, pass_args=True))
     dp.add_handler(CommandHandler("gohome", commands.go_home))
     dp.add_handler(CommandHandler("gowork", commands.go_work))
 
