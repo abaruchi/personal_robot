@@ -1,6 +1,5 @@
 """
 """
-
 from telegram import KeyboardButton, ReplyKeyboardMarkup
 
 from api.subway import GetLinesStatus
@@ -130,17 +129,16 @@ def cet_data(bot, update, args):
     arg_size = len(args)
     if arg_size >= 1:
 
-        if args == "total_traffic":
+        if args[0] == "now":
             message_str_01 = "Traffic Jam: "
             message_str_02 = cet.get_total_traffic()
-            cur_info = message_str_01 + message_str_02
+            cur_info = message_str_01 + message_str_02 + " KM"
 
             bot.sendMessage(
                 update.message.chat_id,
                 text=cur_info
             )
 
-        elif args == "tendency":
             message_str_01 = "Traffic Tendency: "
             message_str_02 = cet.get_tendency()
             cur_info = message_str_01 + message_str_02
@@ -150,8 +148,13 @@ def cet_data(bot, update, args):
                 text=cur_info
             )
 
-        elif args == "map":
-            return cet.get_cet_graph()
+        elif args[0] == "map":
+
+            img_path = cet.get_cet_graph()
+            bot.send_photo(
+                update.message.chat_id,
+                photo=open(img_path, 'rb')
+            )
 
         else:
             bot.sendMessage(
