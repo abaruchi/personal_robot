@@ -10,12 +10,17 @@ from telegram.ext import ConversationHandler
 from api.traffic import TrafficInformation
 from api.weather import WeatherInformation
 
+from .logger import Log
+
+log_now = Log()
 
 class Conversation(object):
 
     def cancel(self, bot, update):
         update.message.reply_text('Shit.. I always waste my time with you.. ',
                                   reply_markup=ReplyKeyboardRemove())
+        log_now.log_my_robot_conversation(update.message.from_user['username'],
+                                          'Conv Cancel')
 
         return ConversationHandler.END
 
@@ -47,6 +52,9 @@ class Location(Conversation):
                 one_time_keyboard=True
             )
         )
+        log_now.log_my_robot_conversation(update.message.from_user['username'],
+                                          'Location', 'start')
+
         return self.MY_LOCATION
 
     def my_current_address(self, bot, update, user_data):
@@ -68,6 +76,8 @@ class Location(Conversation):
             update.message.chat_id,
             text=message
         )
+        log_now.log_my_robot_conversation(update.message.from_user['username'],
+                                          'Location', addr_01)
         return self.OTHER_LOCATION
 
     def my_other_address(self, bot, update, user_data):
@@ -86,6 +96,8 @@ class Location(Conversation):
             update.message.chat_id,
             text=message
         )
+        log_now.log_my_robot_conversation(update.message.from_user['username'],
+                                          'Location')
         return self.DIRECTION
 
     def my_directions(self, bot, update, user_data):
@@ -115,7 +127,9 @@ class Location(Conversation):
                 update.message.chat_id,
                 text=bye_message
             )
-
+            log_now.log_my_robot_conversation(
+                update.message.from_user['username'],
+                'Location', "End Conversation")
             return ConversationHandler.END
 
         gmaps = TrafficInformation()
@@ -138,6 +152,9 @@ class Location(Conversation):
             update.message.chat_id,
             text=message_part_02
         )
+        log_now.log_my_robot_conversation(
+            update.message.from_user['username'],
+            'Location', "From: {}, To: {}".format(from_loc, to_loc))
 
         return ConversationHandler.END
 
@@ -200,6 +217,10 @@ class Weather(Conversation):
             text=message,
             reply_markup=self.markup_gran)
 
+        log_now.log_my_robot_conversation(
+            update.message.from_user['username'],
+            'Weather', "Place: {}".format(text))
+
         return self.INFO
 
     def my_cur_location(self, bot, update, user_data):
@@ -223,6 +244,11 @@ class Weather(Conversation):
         update.message.reply_text(
             text=message,
             reply_markup=self.markup_gran)
+
+        log_now.log_my_robot_conversation(
+            update.message.from_user['username'],
+            'Weather', "Place: lat{} long{}".format(user_data['latitude'],
+                                                    user_data['longitude']))
 
         return self.INFO
 
@@ -267,5 +293,8 @@ class Weather(Conversation):
                     text=text_02
                 )
                 sleep(2)
+        log_now.log_my_robot_conversation(
+            update.message.from_user['username'],
+            'Weather', "rain prob and weather summary")
 
         return ConversationHandler.END
