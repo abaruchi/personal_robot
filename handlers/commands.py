@@ -5,8 +5,8 @@ from telegram import KeyboardButton, ReplyKeyboardMarkup
 from api.subway import GetLinesStatus
 from api.traffic import TrafficInformation, TrafficNow
 from utils import Messages
-from .logger import Log
 
+from .logger import Log
 
 log_now = Log()
 
@@ -25,7 +25,7 @@ def line(bot, update, args):
     """
     arg_size = len(args)
     if arg_size == 1:
-        log_now.log_my_robot(update.message.from_user['username'],
+        log_now.log_my_robot_command(update.message.from_user['username'],
                              'lines', args[0])
         metro_stat = GetLinesStatus()
         if args[0] == "all":
@@ -78,7 +78,7 @@ def my_location_button(bot, update):
             one_time_keyboard=True
         )
     )
-    log_now.log_my_robot(update.message.from_user['username'],
+    log_now.log_my_robot_command(update.message.from_user['username'],
                          'my_location_button', 'None')
 
 
@@ -101,7 +101,7 @@ def go_home(bot, update):
         update.message.chat_id,
         text=cur_info
     )
-    log_now.log_my_robot(update.message.from_user['username'],
+    log_now.log_my_robot_command(update.message.from_user['username'],
                          'go_home', "None")
 
 
@@ -124,8 +124,8 @@ def go_work(bot, update):
         update.message.chat_id,
         text=cur_info
     )
-    log_now.log_my_robot(update.message.from_user['username'],
-                         'go_work', "None" )
+    log_now.log_my_robot_command(update.message.from_user['username'],
+                         'go_work', "None")
 
 
 def cet_data(bot, update, args):
@@ -139,7 +139,7 @@ def cet_data(bot, update, args):
     cet = TrafficNow()
     arg_size = len(args)
     if arg_size >= 1:
-        log_now.log_my_robot(update.message.from_user['username'],
+        log_now.log_my_robot_command(update.message.from_user['username'],
                              'cet_data', args[0])
         if args[0] == "now":
             message_str_01 = "Traffic Jam: "
