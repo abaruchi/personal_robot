@@ -5,7 +5,10 @@ from telegram import KeyboardButton, ReplyKeyboardMarkup
 from api.subway import GetLinesStatus
 from api.traffic import TrafficInformation, TrafficNow
 from utils import Messages
+from .logger import Log
 
+
+log_now = Log()
 
 def start(bot, update):
     user = update.message.from_user
@@ -22,6 +25,8 @@ def line(bot, update, args):
     """
     arg_size = len(args)
     if arg_size == 1:
+        log_now.log_my_robot(update.message.from_user['username'],
+                             'lines', args[0])
         metro_stat = GetLinesStatus()
         if args[0] == "all":
             msg_dict = metro_stat.all_subway_lines_status()
@@ -57,7 +62,7 @@ def line(bot, update, args):
                 text=Messages.metro_usage_help())
 
 
-def my_location_button(bot, update, args):
+def my_location_button(bot, update):
     """
 
     :param bot:
@@ -73,6 +78,8 @@ def my_location_button(bot, update, args):
             one_time_keyboard=True
         )
     )
+    log_now.log_my_robot(update.message.from_user['username'],
+                         'my_location_button', 'None')
 
 
 def go_home(bot, update):
@@ -94,6 +101,8 @@ def go_home(bot, update):
         update.message.chat_id,
         text=cur_info
     )
+    log_now.log_my_robot(update.message.from_user['username'],
+                         'go_home', "None")
 
 
 def go_work(bot, update):
@@ -115,6 +124,8 @@ def go_work(bot, update):
         update.message.chat_id,
         text=cur_info
     )
+    log_now.log_my_robot(update.message.from_user['username'],
+                         'go_work', "None" )
 
 
 def cet_data(bot, update, args):
@@ -128,7 +139,8 @@ def cet_data(bot, update, args):
     cet = TrafficNow()
     arg_size = len(args)
     if arg_size >= 1:
-
+        log_now.log_my_robot(update.message.from_user['username'],
+                             'cet_data', args[0])
         if args[0] == "now":
             message_str_01 = "Traffic Jam: "
             message_str_02 = cet.get_total_traffic()
@@ -155,9 +167,8 @@ def cet_data(bot, update, args):
                 update.message.chat_id,
                 photo=open(img_path, 'rb')
             )
-
-        else:
-            bot.sendMessage(
-                update.message.chat_id,
-                text="Need to know what you want, see help message about args"
-            )
+    else:
+        bot.sendMessage(
+            update.message.chat_id,
+            text="Use map or now as parameter"
+        )
