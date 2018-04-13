@@ -25,7 +25,7 @@ class Log(object):
         logHandler.setFormatter(logger_formatter)
         self.logger.addHandler(logHandler)
 
-    def log_my_robot (self, contact_name, command, log_message):
+    def log_my_robot_command(self, contact_name, command, log_message):
         """
 
         :param contact_name:
@@ -35,5 +35,19 @@ class Log(object):
         """
         log = "Contact: {}, Command: {} - {}".format(contact_name,
                                                      command,
+                                                     log_message)
+        self.logger.info(log)
+
+    def log_my_robot_conversation(self, contact_name, context,
+                                  log_message='None'):
+        """
+
+        :param contact_name:
+        :param command:
+        :param log_message:
+        :return:
+        """
+        log = "Contact: {}, Context: {} - {}".format(contact_name,
+                                                     context,
                                                      log_message)
         self.logger.info(log)
