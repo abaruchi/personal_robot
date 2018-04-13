@@ -107,7 +107,6 @@ class TrafficNow(object):
         resp = get(cet_url, verify=False)
         self.bsObj = BeautifulSoup(resp.content, "html.parser")
         self.cet_graph = cet_conf["traffic_slowness"]
-
     def get_total_traffic(self):
         """
 
