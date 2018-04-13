@@ -16,7 +16,7 @@ class Log(object):
                                              'processName)s - %(message)s')
 
 
-        file_to_log = "telegram_bot.log"
+        file_to_log = "./log/telegram_bot.log"
         logHandler = logging.handlers.TimedRotatingFileHandler(file_to_log,
                                                                 when='W6',
                                                                 interval=1,
